@@ -25,8 +25,20 @@ def parseFile(path):
 			"books": [int(book) for book in bookLine]
 		}
 		libraries.append(library)
+	file.close()
 	data["libraries"] = libraries
 	return data
+
+def outputData (path, data):
+	file = open(path, "w")
+	#Line 0
+	file.write(f"{len(data)}\n")
+	for library in data:
+		file.write(f"{library['id']} {len(library['books'])}\n")
+		for bookId in library["books"]:
+			file.write(f"{bookId} ")
+		file.write("\n")
+	file.close()
 
 if __name__ == "__main__":
 	print(parseFile(sys.argv[1]))
