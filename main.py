@@ -1,3 +1,5 @@
+import sys
+
 def parseFile(path):
 	file = open(path, "r")
 
@@ -25,3 +27,7 @@ def parseFile(path):
 		libraries.append(library)
 	data["libraries"] = libraries
 	return data
+
+if __name__ == "__main__":
+	print(parseFile(sys.argv[1]))
+
