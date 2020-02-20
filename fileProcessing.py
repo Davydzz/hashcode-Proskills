@@ -56,15 +56,36 @@ def averageLibraries(data):
 		scanSpeed = totalScore/(math.ceil(i["numberOfBooks"]/i["rate"]))
 		scanSpeeds.append(scanSpeed)
 	
-	print(totalSpeeds, scanSpeeds)
 	return totalSpeeds, scanSpeeds
 
 def maxLibrary (data):
 	libraries = data["libraries"]
-	total, scan = averageLibraries(libraries)
+	total, scan = averageLibraries(data)
 	return total.index(max(total))
 
-	
+def processData (data):
+	results = []
+	daysTaken = 0
+	while daysTaken < data["numberOfDays"]:
+		result = processLibrary(data)
+		booksSubmitted = result["books"]
+		results.append(result)
+		for book in booksSubmitted:
+			data["bookScores"][book] = 0
+		daysTaken += data["libraries"][result["id"]]["signup"]
+		print(f"{daysTaken} out of {data['numberOfDays']}. {result['id']} processed")
+	return results
+
+def processLibrary (data):
+	results = []
+	maxLib = maxLibrary(data)
+	booksSubmitted = sorted(data["libraries"][maxLib]["books"], key=lambda book: data["bookScores"][book], reverse=True)
+	return {
+		"id": maxLib,
+		"books": booksSubmitted
+	}
+
 if __name__ == "__main__":
 	data = (parseFile(sys.argv[1]))
-	x,y = averageLibraries(data)
+	p = processData(data)
+	outputData(sys.argv[2], p)
