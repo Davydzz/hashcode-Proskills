@@ -1,4 +1,5 @@
 import sys
+import math
 
 def parseFile(path):
 	file = open(path, "r")
@@ -40,26 +41,30 @@ def outputData (path, data):
 		file.write("\n")
 	file.close()
 
-if __name__ == "__main__":
-	print(parseFile(sys.argv[1]))
 
-def averageLibraries(libraries):
-	
+def averageLibraries(data):
+	libraries = data["libraries"]
 	totalSpeeds = []
 	scanSpeeds = []
 
-    for i in libraries:
+	for i in libraries:
 		totalScore = 0
-        for b in i["book"]:
-            totalScore += bookScores[b]
-
-		totalSpeed = totalScore/(signup + numberOfBooks/rate)
+		for b in i["books"]:
+			totalScore += data["bookScores"][b]
+		totalSpeed = totalScore/(i["signup"] + math.ceil(i["numberOfBooks"]/i["rate"]))
 		totalSpeeds.append(totalSpeed)
-		scanSpeed = totalScore/(numberOfBooks/rate)
+		scanSpeed = totalScore/(math.ceil(i["numberOfBooks"]/i["rate"]))
 		scanSpeeds.append(scanSpeed)
-
+	
+	print(totalSpeeds, scanSpeeds)
 	return totalSpeeds, scanSpeeds
 
-def maxFromAverages (libraries)
+def maxLibrary (data):
+	libraries = data["libraries"]
 	total, scan = averageLibraries(libraries)
+	return total.index(max(total))
+
 	
+if __name__ == "__main__":
+	data = (parseFile(sys.argv[1]))
+	x,y = averageLibraries(data)
