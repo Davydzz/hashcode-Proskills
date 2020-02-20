@@ -43,3 +43,23 @@ def outputData (path, data):
 if __name__ == "__main__":
 	print(parseFile(sys.argv[1]))
 
+def averageLibraries(libraries):
+	
+	totalSpeeds = []
+	scanSpeeds = []
+
+    for i in libraries:
+		totalScore = 0
+        for b in i["book"]:
+            totalScore += bookScores[b]
+
+		totalSpeed = totalScore/(signup + numberOfBooks/rate)
+		totalSpeeds.append(totalSpeed)
+		scanSpeed = totalScore/(numberOfBooks/rate)
+		scanSpeeds.append(scanSpeed)
+
+	return totalSpeeds, scanSpeeds
+
+def maxFromAverages (libraries)
+	total, scan = averageLibraries(libraries)
+	
