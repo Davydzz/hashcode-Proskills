@@ -15,9 +15,9 @@ def parseFile(path):
 	data["bookScores"] = [int(number) for number in lines[1].split()]
 	libraries = []
 	for libraryNumber in range(0, data["numberOfLibraries"]):
-		index = libraryNumber + 2
+		index = (libraryNumber + 1)*2
 		infoLine = lines[index].split()
-		bookLine = lines[index].split()
+		bookLine = lines[index+1].split()
 		library = {
 			"numberOfBooks": int(infoLine[0]),
 			"signup": int(infoLine[1]),
