@@ -1,6 +1,23 @@
 import sys
 import math
 
+def allIndicies(listOfElements, element):
+    ''' Returns the indexes of all occurrences of give element in
+    the list- listOfElements '''
+    indexPosList = []
+    indexPos = 0
+    while True:
+        try:
+            # Search for item in list from indexPos to the end of list
+            indexPos = listOfElements.index(element, indexPos)
+            # Add the index position in list
+            indexPosList.append(indexPos)
+            indexPos += 1
+        except ValueError as e:
+            break
+ 
+    return indexPosList
+
 def parseFile(path):
 	file = open(path, "r")
 
@@ -61,19 +78,39 @@ def averageLibraries(data):
 def maxLibrary (data):
 	libraries = data["libraries"]
 	total, scan = averageLibraries(data)
-	return total.index(max(total))
+
+	indicies = allIndicies(total, max(total))
+	if len(indicies) == 1:
+		return indicies[0]
+	relevantScanSpeeds = [scan[index] for index in indicies]
+	indicies1 = allIndicies(relevantScanSpeeds, max(relevantScanSpeeds)) 
+	if len(indicies1) == 1:
+		return indicies[indicies1[0]]
+	relevantLengths = [len(libraries[index]["books"]) for index in indicies]
+	print(relevantLengths)
+	indicies2 = allIndicies(relevantLengths, min(relevantLengths))
+	return indicies[indicies1[indicies2[0]]]
+
 
 def processData (data):
 	results = []
 	daysTaken = 0
+	librariesUsed = []
 	while daysTaken < data["numberOfDays"]:
 		result = processLibrary(data)
-		booksSubmitted = result["books"]
+		id = result["id"]
+		# try:
+		# 	librariesUsed.index(id)
+		# 	print(f"List consumed at {daysTaken}")
+		# 	break
+		# except ValueError:
+		# 	pass
 		results.append(result)
-		for book in booksSubmitted:
+		for book in result["books"]:
 			data["bookScores"][book] = 0
-		daysTaken += data["libraries"][result["id"]]["signup"]
-		print(f"{daysTaken} out of {data['numberOfDays']}. {result['id']} processed")
+		daysTaken += data["libraries"][id]["signup"]
+		librariesUsed.append(id)
+		print(f"{daysTaken} out of {data['numberOfDays']}. {id} processed")
 	return results
 
 def processLibrary (data):
